@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Progress - KEYSKILL</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Logo & Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+  <!-- Add Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header class="header row">
+      <div class="logo-wrap">
+        <img class="site-logo" src="logo.jpg" alt="KEYSKILL Logo" height="45" />
+      </div>
+      <h1 class="logo">Your Progress</h1>
+      <nav>
+        <a class="btn" href="index.html">Home</a>
+        <button class="btn" id="btnGoBack" type="button">Go Back</button>
+        <a class="btn" href="test.html">New Test</a>
+      </nav>
+    </header>
+
+    <!-- Chart Container for Progress Visualization -->
+    <div class="chart-container" style="margin: 20px 0;">
+      <canvas id="progressChart" width="600" height="300"></canvas>
+    </div>
+
+    <div class="card">
+      <h2>Typing History</h2>
+      <div class="table-actions">
+        <button class="btn" id="btnClear">Clear History</button>
+        <button class="btn primary" id="btnExport">Export CSV</button>
+      </div>
+      <div class="table-wrap">
+        <table class="table" id="resultsTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Language</th>
+              <th>Duration</th>
+              <th>WPM</th>
+              <th>Accuracy</th>
+              <th>Errors</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Filled by script.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Render typing history table
+    function renderHistoryTable() {
+      const tableBody = document.querySelector('#resultsTable tbody');
+      tableBody.innerHTML = '';
+      const history = JSON.parse(localStorage.getItem('typingHistory') || '[]');
+      history.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.date}</td>
+          <td>${item.language}</td>
+          <td>${item.duration}s</td>
+          <td>${item.wpm}</td>
+          <td>${item.accuracy}%</td>
+          <td>${item.errors}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Clear history button logic
+    document.addEventListener('DOMContentLoaded', () => {
+      renderHistoryTable();
+      // Wire Go Back and Test buttons
+      const goBack = document.getElementById('btnGoBack');
+      if (goBack) goBack.addEventListener('click', () => {
+        try {
+          // If the session history stack has previous entries, go back.
+          // Otherwise fall back to the site index so the user isn't left stranded.
+          if (window.history.length > 1) {
+            window.history.back();
+          } else {
+            window.location.href = 'index.html';
+          }
+        } catch (e) {
+          window.location.href = 'index.html';
+        }
+      });
+  // 'Test' quick button removed; use the 'New Test' link if needed.
+      document.getElementById('btnClear').addEventListener('click', () => {
+        localStorage.removeItem('typingHistory');
+        renderHistoryTable();
+        // Also clear the chart by re-rendering with empty data
+        renderProgressChart();
+      });
+
+      // Export CSV logic
+      document.getElementById('btnExport').addEventListener('click', () => {
+        const history = JSON.parse(localStorage.getItem('typingHistory') || '[]');
+        if (history.length === 0) return alert('No history to export.');
+
+        let csvContent = 'Date,Language,Duration (s),WPM,Accuracy (%),Errors\n';
+        history.forEach(item => {
+          csvContent += `${item.date},${item.language},${item.duration},${item.wpm},${item.accuracy},${item.errors}\n`;
+        });
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'keys_skill_typing_history.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    });
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>

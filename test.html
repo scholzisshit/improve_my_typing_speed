@@ -1,0 +1,113 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typing Test - KEYSKILL</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Logo & Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+  <div class="container">
+    <header class="header row">
+      <div class="logo-wrap">
+        <img class="site-logo" src="logo.jpg" alt="KEYSKILL Logo" height="45">
+      </div>
+      <h1 class="logo">Typing Test</h1>
+      <nav>
+        <a class="btn" href="index.html">Home</a>
+        <a class="btn" href="results.html">Progress</a>
+      </nav>
+    </header>
+
+    <div class="card">
+      <div class="controls">
+        <label>
+          Language
+          <select id="language">
+            <option value="english">English</option>
+            <option value="hindi">Hindi</option>
+          </select>
+        </label>
+        <label>
+          Duration
+          <select id="duration">
+            <option value="15">15s</option>
+            <option value="30">30s</option>
+            <option value="60" selected>60s</option>
+            <option value="120">120s</option>
+          </select>
+        </label>
+        <button class="btn" id="btnReset" disabled>Reset</button>
+        <button class="btn" id="btnClearData" title="Clear saved progress and settings">Clear Data</button>
+      </div>
+
+  <div id="text-display" class="text-display"></div>
+  <textarea id="text-input" class="input invite-pulse" placeholder="Start typing here..." disabled autofocus></textarea>
+  <div id="start-hint" class="start-hint" style="text-align:center; color:#6b7280; margin-top:10px; font-size:0.95rem;">Start typing to begin the test</div>
+
+      <div class="stats">
+        <div class="stat"><span class="label">WPM</span><span id="wpm" class="value">0</span></div>
+        <div class="stat"><span class="label">Accuracy</span><span id="accuracy" class="value">100%</span></div>
+        <div class="stat"><span class="label">Errors</span><span id="errors" class="value">0</span></div>
+        <div class="stat"><span class="label">Time</span><span id="timer" class="value">60</span></div>
+      </div>
+
+      <!-- New Test Button -->
+      <div style="text-align: center; margin-top: 30px;">
+        <button id="btnNewTest" class="btn primary" style="padding: 12px 24px; font-size: 1.1rem; border-radius: 6px;">
+          New Test
+        </button>
+      </div>
+
+  <!-- Result overlay (hidden by default; shown by script) -->
+  <div id="result-overlay" class="result-overlay" style="display:none; position:fixed; left:0; top:0; right:0; bottom:0; background:rgba(0,0,0,0.6);">
+        <div class="result-card">
+          <h2>Results</h2>
+          <div id="pb-badge" style="display:none; color: var(--ok); font-weight:800; margin-bottom:8px;">New personal best!</div>
+          <p>WPM: <strong id="res-wpm">0</strong></p>
+          <p>Characters/min: <strong id="res-cpm">0</strong></p>
+          <p>Keys/sec: <strong id="res-kps">0</strong></p>
+          <p>Accuracy: <strong id="res-acc">100%</strong></p>
+          <p>Errors: <strong id="res-err">0</strong></p>
+          <div id="pb-history" style="text-align:left; margin-top:12px;">
+            <h3 style="margin:10px 0 6px; font-size:0.95rem;">Top runs</h3>
+            <ol id="pb-list" style="margin:0 0 6px 18px; padding:0; color:#111"></ol>
+          </div>
+          <div style="margin-top:16px;">
+            <button id="res-close" class="btn">Close</button>
+            <button id="res-new" class="btn primary">New Test</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="texts.js"></script>
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btnNewTest = document.getElementById('btnNewTest');
+      btnNewTest.addEventListener('click', () => {
+        // Assuming you have an existing reset() function in script.js
+        if(typeof reset === 'function') {
+          reset();
+        } else {
+          // fallback: reset inputs manually if no reset()
+          const textInput = document.getElementById('text-input');
+          textInput.value = '';
+          textInput.disabled = true;
+          document.getElementById('wpm').textContent = '0';
+          document.getElementById('accuracy').textContent = '100%';
+          document.getElementById('errors').textContent = '0';
+          document.getElementById('timer').textContent = document.getElementById('duration').value;
+          // Other reset logic as needed
+        }
+      });
+    });
+  </script>
+</body>
+</html>
