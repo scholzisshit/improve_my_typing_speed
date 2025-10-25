@@ -1,2 +1,2 @@
-# ABHINAVPROJ
-Abhinav's typing speed test project
+i wanna improve my typing speed but want to run it localy.......
+----might turn it into a web app soon
